@@ -157,7 +157,7 @@ process.stdin.on('keypress', function (ch, key) {
             break;
             case "y": land();
             break;
-            case "o": ledAnimBlink("3,1073741824,2");
+            case "o": ledAnimBlink("blinkOrange",4,2);
             break;
       }
   }
