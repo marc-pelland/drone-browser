@@ -3,7 +3,7 @@
   "description": "Remote control for your ar-drone via your browser",
   "version": "0.1.0",
   "dependencies": {
-    "keyboard": "~0.1.0",
+    "keypress": "~0.1.0",
     "express": "~3.0.0",
     "midi": "0.7.0",
     "ar-drone": "git://github.com/felixge/node-ar-drone.git",
