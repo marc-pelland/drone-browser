@@ -8,7 +8,7 @@
   midi = require("midi");
   drone = require("ar-drone").createClient();
   drone.config('general:navdata_demo', 'TRUE');
-  moveSpeed = 0.3;
+  moveSpeed = 0.4;
   app = express();
   app.configure(function() {
     app.set('port', process.env.PORT || 3001);
@@ -39,6 +39,9 @@
   server.listen(app.get("port"), function() {
     return console.log("Express server listening on port " + app.get("port"));
   });
+  /** START OF IMAGE BLOCK, 
+   * IF YOU DON'T HAVE FFMPEG COMMENT THIS BLOCK OUT
+   * */
   currentImg = null;
   drone.on('navdata', function(data) {
     return socket.publish("/drone/navdata", data);
@@ -61,10 +64,17 @@
     });
     return res.end(currentImg, "binary");
   });
-  
+  /** END OF IMAGE BLOCK **/
   function moveDrone(ARG_dir) {
       console.log("MOVE " + ARG_dir);
-    return typeof drone[_name = ARG_dir] === "function" ? drone[_name](moveSpeed) : void 0;
+      
+      if (ARG_dir == "up" || ARG_dir == "down") {
+      	return typeof drone[_name = ARG_dir] === "function" ? drone[_name](moveSpeed/2) : void 0;
+      } else {
+      	return typeof drone[_name = ARG_dir] === "function" ? drone[_name](moveSpeed) : void 0;
+      }
+      
+    
   }
  
   function emergencyLand() {
@@ -110,9 +120,9 @@
   }
  
   function setIndoorConfig() {
-      configEulerMax("0.1");
+      configEulerMax("0.15");
       maxAltitude("3000");
-      vertSpeed("1500");
+      vertSpeed("3000");
       isOutdoor("FALSE");
       isOutdoorHull("FALSE");
   }
@@ -174,18 +184,18 @@ process.stdin.on('keypress', function (ch, key) {
 	
 	if (message[0] == 190) {
 		if (message[2] > trackOnePos) {
-			moveDrone("up", 0.3);
+			moveDrone("up");
 		} else if (message[2] < trackOnePos) {
 			// console.log("MOVE DOWN");
-			moveDrone("down", 0.3);
+			moveDrone("down");
 		}
 		
 		trackOnePos = message[2];
 	} else {
 		if (message[2] > trackTwoPos) {
-			moveDrone("left", 0.3);
+			moveDrone("left");
 		} else if (message[2] < trackTwoPos) {
-			moveDrone("right", 0.3);
+			moveDrone("right");
 		}
 		
 		trackTwoPos = message[2];
